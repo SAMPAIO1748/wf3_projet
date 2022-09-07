@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class AdminCarController extends AbstractController
 {
@@ -39,7 +40,8 @@ class AdminCarController extends AbstractController
      */
     public function adminCreateCar(
         EntityManagerInterface $entityManagerInterface,
-        Request $request
+        Request $request,
+        SluggerInterface $sluggerInterface
     ) {
         $car = new Car();
 
@@ -52,7 +54,25 @@ class AdminCarController extends AbstractController
             $imageFile = $carForm->get('image')->getData();
 
             if ($imageFile) {
+
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $safeFilename = $sluggerInterface->slug($originalFilename);
+
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                $imageFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+
+                $car->setImage($newFilename);
             }
+
+            $entityManagerInterface->persist($car);
+            $entityManagerInterface->flush();
+
+            return $this->redirectToRoute("admin_list_car");
         }
 
         return $this->render('admin/car_form.html.twig', ['carForm' => $carForm->createView()]);
