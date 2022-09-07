@@ -10,8 +10,12 @@
 		<h3>{{ car.price }}
 			€</h3>
 		<img src="{{ asset("img/" ~ car.image ) }}" alt="{{ car.name }}">
+		<a href="{{ path("admin_update_car", {'id' : car.id }) }}">Modifier la voiture</a>
+		<a href="{{ path('admin_delete_car', {'id' : car.id }) }}">Suprimer la voiture</a>
 		<hr>
 	{% endfor %}
+
+	<a href="{{ path("admin_creat_car") }}">Ajouter une voiture</a>
 
 
 {% endblock %}

@@ -39,6 +39,7 @@ class Car
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="cars")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $type;
 
