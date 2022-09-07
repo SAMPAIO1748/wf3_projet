@@ -77,4 +77,67 @@ class AdminCarController extends AbstractController
 
         return $this->render('admin/car_form.html.twig', ['carForm' => $carForm->createView()]);
     }
+
+    /**
+     * @Route("admin/update/car/{id}", name="admin_update_car")
+     */
+    public function adminUpdateCar(
+        $id,
+        CarRepository $carRepository,
+        EntityManagerInterface $entityManagerInterface,
+        Request $request,
+        SluggerInterface $sluggerInterface
+    ) {
+
+        $car = $carRepository->find($id);
+
+        $carForm = $this->createForm(CarType::class, $car);
+
+        $carForm->handleRequest($request);
+
+        if ($carForm->isSubmitted() && $carForm->isValid()) {
+
+            $imageFile = $carForm->get('image')->getData();
+
+            if ($imageFile) {
+
+                $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $safeFilename = $sluggerInterface->slug($originalFilename);
+
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $imageFile->guessExtension();
+
+                $imageFile->move(
+                    $this->getParameter('images_directory'),
+                    $newFilename
+                );
+
+                $car->setImage($newFilename);
+            }
+
+            $entityManagerInterface->persist($car);
+            $entityManagerInterface->flush();
+
+            return $this->redirectToRoute("admin_list_car");
+        }
+
+        return $this->render('admin/car_form.html.twig', ['carForm' => $carForm->createView()]);
+    }
+
+    /**
+     * @Route("admin/delete/car/{id}", name="admin_delete_car")
+     */
+    public function adminDeleteCar(
+        $id,
+        CarRepository $carRepository,
+        EntityManagerInterface $entityManagerInterface
+    ) {
+        $car = $carRepository->find($id);
+
+        $entityManagerInterface->remove($car);
+
+        $entityManagerInterface->flush();
+
+        return $this->redirectToRoute("admin_list_car");
+    }
 }
