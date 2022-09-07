@@ -1,0 +1,27 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+	{{form_start(carForm)}}
+
+	{{ form_label(carForm.name, "Nom de la voiture", {'label_attr' : {'class' : 'label'} } ) }}
+	{{ form_widget(carForm.name, {'attr' : { 'class' : 'input', 'placeholer' : 'Nom de la voiture' } } ) }}
+
+	{{ form_label(carForm.price, "Prix de la voiture", {'label_attr' : {'class' : 'label'} } ) }}
+	{{ form_widget(carForm.price, {'attr' : { 'class' : 'input', 'placeholer' : 'Prix de la voiture' } } ) }}
+
+	{{ form_label(carForm.description, "Description de la voiture", {'label_attr' : {'class' : 'label'} } ) }}
+	{{ form_widget(carForm.description, {'attr' : { 'class' : 'text', 'placeholer' : 'Description de la voiture' } } ) }}
+
+	{{ form_label(carForm.image, "Image de la voiture", {'label_attr' : {'class' : 'label'} } ) }}
+	{{ form_widget(carForm.image, {'attr' : { 'class' : 'input-img', 'placeholer' : 'Photo de la voiture' } } ) }}
+
+	{{ form_label(carForm.type, "Type de la voiture", {'label_attr' : {'class' : 'label'} } ) }}
+	{{ form_widget(carForm.type, {'attr' : { 'class' : 'input-select', 'placeholer' : 'Type de la voiture' } } ) }}
+
+
+	{{ form_widget(carForm.Enregistrer, {'attr' : {'class' : 'button' } } ) }}
+
+	{{form_end(carForm)}}
+
+{% endblock %}

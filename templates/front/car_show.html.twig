@@ -1,0 +1,10 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+	<h1>{{ car.name }}</h1>
+	<h2>{{ car.price }}</h2>
+	<img src="{{ asset("img/" ~ car.image) }}" alt="{{ car.name }}">
+	<p>{{ car.description }}</p>
+
+{% endblock %}

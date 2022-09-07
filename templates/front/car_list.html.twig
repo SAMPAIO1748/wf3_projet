@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+
+	{% for car in cars %}
+		<a href="{{ path("front_show_car", {'id' : car.id } ) }}">
+			<h2>{{ car.name }}</h2>
+		</a>
+		<h3>{{ car.price }}
+			€</h3>
+		<img src="{{ asset("img/" ~ car.image ) }}" alt="{{ car.name }}">
+		<hr>
+	{% endfor %}
+
+
+{% endblock %}
