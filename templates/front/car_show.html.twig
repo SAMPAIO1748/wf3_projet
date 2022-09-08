@@ -7,4 +7,34 @@
 	<img src="{{ asset("img/" ~ car.image) }}" alt="{{ car.name }}">
 	<p>{{ car.description }}</p>
 
+	<hr>
+	<hr>
+	<h2>Commentaires</h2>
+	<hr>
+
+	{% for comment in car.comments %}
+		<h3>Par
+			{{ comment.user.name }}
+			{{ comment.user.firstname }}, le
+			{{ comment.date | date('d-m-Y') }}</h3>
+		<p>{{ comment.content }}</p>
+	{% endfor %}
+
+	{% if app.user %}
+
+		{{ form_start(commentForm) }}
+
+		{{form_label(commentForm.content, "Ecrivez votre commentaire : ")}}
+		{{form_widget(commentForm.content, {'attr' : {'placeholder' : "Ecrivez votre commentaire...", 'cols' : '30', 'rows' : '10' } } ) }}
+
+		{{ form_widget(commentForm.Publier) }}
+
+		{{ form_end(commentForm) }}
+
+	{% else %}
+		<p>Vous devez vous connecter pour commenter</p>
+
+	{% endif %}
+
+
 {% endblock %}

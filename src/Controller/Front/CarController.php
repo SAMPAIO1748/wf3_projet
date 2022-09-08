@@ -2,11 +2,15 @@
 
 namespace App\Controller\Front;
 
+use App\Entity\Comment;
+use App\Form\CommentType;
 use App\Repository\CarRepository;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 
 class CarController extends AbstractController
 {
@@ -23,11 +27,40 @@ class CarController extends AbstractController
     /**
      * @Route("/car/{id}", name="front_show_car")
      */
-    public function ShowCar($id, CarRepository $carRepository)
-    {
+    public function ShowCar(
+        $id,
+        CarRepository $carRepository,
+        Request $request,
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManagerInterface
+    ) {
         $car = $carRepository->find($id);
 
-        return $this->render("front/car_show.html.twig", ['car' => $car]);
+        $user = $this->getUser();
+
+        if ($user) {
+            $user_email = $user->getUserIdentifier();
+            $user_final = $userRepository->findOneBy(['email' => $user_email]);
+        }
+
+
+
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentType::class, $comment);
+        $commentForm->handleRequest($request);
+
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            $comment->setDate(new \DateTime("NOW"));
+            $comment->setCar($car);
+            $comment->setUser($user_final);
+
+            $entityManagerInterface->persist($comment);
+            $entityManagerInterface->flush();
+
+            return $this->redirectToRoute("front_show_car", ['id' => $id]);
+        }
+
+        return $this->render("front/car_show.html.twig", ['car' => $car, 'commentForm' => $commentForm->createView()]);
     }
 
     /**
