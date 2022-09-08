@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+	<h1>Voic le résultat de votre recherche :
+		{{ term }}
+		:</h1>
+
+	{% for car in cars %}
+
+		<h2>
+			<a href="{{ path('front_show_car', {'id' : car.id }) }}">{{ car.name }}</a>
+		</h2>
+
+	{% endfor %}
+
+{% endblock %}

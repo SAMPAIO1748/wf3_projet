@@ -6,6 +6,7 @@ use App\Repository\CarRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 class CarController extends AbstractController
 {
@@ -27,5 +28,20 @@ class CarController extends AbstractController
         $car = $carRepository->find($id);
 
         return $this->render("front/car_show.html.twig", ['car' => $car]);
+    }
+
+    /**
+     * @Route("search", name="search")
+     */
+    public function search(
+        Request $request,
+        CarRepository $carRepository
+    ) {
+
+        $term = $request->query->get("search");
+
+        $cars = $carRepository->searchByTerm($term);
+
+        return $this->render("front/search.html.twig", ['cars' => $cars, 'term' => $term]);
     }
 }
