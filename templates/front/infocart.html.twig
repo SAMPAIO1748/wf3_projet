@@ -1,0 +1,18 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+<form action="{{ path('create_command') }}" method="post">
+
+    <label for="name">Nom</label>
+    <input type="text" name="name" id="name" {% if app.user %} value="{{ app.user.name }}" {% endif %}>
+    <label for="firstname">Prénom</label>
+    <input type="text" name="firstname" id="firstname"  {% if app.user %} value="{{ app.user.firstname }}" {% endif %}>
+    <label for="email">Email</label>
+    <input type="email" name="email" id="email" {% if app.user %} value="{{ app.user.email }}" {% endif %}>
+    <input type="submit" value="Confirmer">
+
+
+</form>
+
+{% endblock %}
