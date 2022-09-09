@@ -14,6 +14,7 @@
             <h3>{{ cart.car.price }} €</h3>
             <img src="{{ asset('img/' ~ cart.car.image) }}" alt="{{ cart.car.name }}">
             <h3>Quantité : {{ cart.quantity }}</h3>
+            <a href="{{ path('delete_cart', {'id' : cart.car.id })}}">Supprimer</a>
             <hr>
             <hr>
         {% endfor %}

@@ -63,4 +63,23 @@ class CommandController extends AbstractController
 
         return $this->render("front/cart_show.html.twig", ['cartWithCar' => $cartWithCar]);
     }
+
+    /**
+     * @Route("cart/delete/{id}", name="delete_cart")
+     */
+    public function deleteCart($id, SessionInterface $sessionInterface)
+    {
+        $cart = $sessionInterface->get('cart', []);
+
+        if (!empty($cart[$id]) && $cart[$id] === 1) {
+            // unset supprime l'élément du tableau
+            unset($cart[$id]);
+        } else {
+            $cart[$id]--;
+        }
+
+        $sessionInterface->set('cart', $cart);
+
+        return $this->redirectToRoute("show_cart");
+    }
 }
