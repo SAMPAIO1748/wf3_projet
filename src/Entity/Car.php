@@ -50,9 +50,15 @@ class Car
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Command::class, mappedBy="cars")
+     */
+    private $commands;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->commands = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,6 +151,33 @@ class Car
             if ($comment->getCar() === $this) {
                 $comment->setCar(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Command>
+     */
+    public function getCommands(): Collection
+    {
+        return $this->commands;
+    }
+
+    public function addCommand(Command $command): self
+    {
+        if (!$this->commands->contains($command)) {
+            $this->commands[] = $command;
+            $command->addCar($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommand(Command $command): self
+    {
+        if ($this->commands->removeElement($command)) {
+            $command->removeCar($this);
         }
 
         return $this;

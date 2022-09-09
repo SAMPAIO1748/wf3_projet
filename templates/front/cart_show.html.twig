@@ -1,0 +1,24 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+    {% if cartWithCar == []  %}
+    
+
+        <h2>Panier vide</h2>
+
+        {% else %}
+            
+        {% for cart in cartWithCar %}
+            <h2>{{ cart.car.name }}</h2>
+            <h3>{{ cart.car.price }} €</h3>
+            <img src="{{ asset('img/' ~ cart.car.image) }}" alt="{{ cart.car.name }}">
+            <h3>Quantité : {{ cart.quantity }}</h3>
+            <hr>
+            <hr>
+        {% endfor %}
+    
+    
+    {% endif %}
+
+{% endblock %}
